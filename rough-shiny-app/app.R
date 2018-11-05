@@ -14,7 +14,7 @@ ui <- fluidPage(
     sidebarPanel(
       # Input: Numeric entry for number of obs to view ----
       selectInput(inputId = "dataset",
-                  label = "Choose a dataset:",
+                  label = "Choose a Florida county:",
                   choices = c("Alachua", "Baker", "Bay", "Bradford", "Brevard", "Broward", 
                              "Calhoun", "Charlotte", "Citrus", "Clay", "Collier", "Columbia", 
                              "Miami-Dade", "Desoto", "Dixie", "Duval", "Escambia", "Flagler", 
@@ -25,24 +25,29 @@ ui <- fluidPage(
                              "Martin", "Nassau", "Okaloosa", "Okeechobee", "Orange", "Osceola",
                              "Palm Beach", "Pasco", "Pinellas", "Polk", "Putnam", "Santa Rosa",
                              "Sarasota", "Seminole", "St. Johns", "St. Lucie", "Sumter", "Suwannee",
-                             "Taylor", "Union", "Volusia", "Wakulla", "Walton", "Washington")),
+                             "Taylor", "Union", "Volusia", "Wakulla", "Walton", "Washington"))),
       
     
     # Show a plot of the generated distribution
     mainPanel(
       
+      plotOutput("view")
       
     )
   )
 )
-)
+
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
-  output$view <- renderTable({
+  output$view <- renderPlot({
   }
-  #//do something here
+  x %>% 
+    filter(CountyName == input$CountyName) %>% 
+    ggplot(aes(x = percent, y = value)) + 
+    geom_bar(stat='identity') + 
+    xlab("Candidate") + ylab("Percent")
   )
   
 }
