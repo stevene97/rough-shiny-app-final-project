@@ -1,43 +1,51 @@
 library(shiny)
 library(tidyverse)
-df <- readRDS('floridaprimary.rds')
+
+x <- read_rds("floridaprimarydata.rds")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-   
-   # Sidebar with a slider input for number of bins 
-   sidebarLayout(
-     
-      sidebarPanel(
-        
-         selectInput(inputId = "dataset",
-                     label = "Select County in Florida",
-                     choices = c("Alachua", "Baker", "Bay", "Bradford", "Brevard", "Broward", 
-                                 "Calhoun", "Charlotte", "Citrus", "Clay", "Collier", "Columbia", 
-                                 "Miami-Dade", "Desoto", "Dixie", "Duval", "Escambia", "Flagler", 
-                                 "Franklin", "Gadsden", "Gilchrist", "Glades", "Gulf", "Hamilton",
-                                 "Hardee", "Hendry", "Hernando", "Highlands", "Hillsborough", "Holmes",
-                                 "Indian River", "Jackson", "Jefferson", "Lafayette", "Lake", "Lee",
-                                 "Leon", "Levy", "Liberty", "Madison", "Manatee", "Monroe", "Marion",
-                                 "Martin", "Nassau", "Okaloosa", "Okeechobee", "Orange", "Osceola",
-                                 "Palm Beach", "Pasco", "Pinellas", "Polk", "Putnam", "Santa Rosa",
-                                 "Sarasota", "Seminole", "St. Johns", "St. Lucie", "Sumter", "Suwannee",
-                                 "Taylor", "Union", "Volusia", "Wakulla", "Walton", "Washington")
-      )
-   )
+  
+  # Application title
+  titlePanel("Florida Democratic Primary 2018"),
+  
+  # Sidebar with a slider input for number of bins 
+  sidebarLayout(
+    sidebarPanel(
+      # Input: Numeric entry for number of obs to view ----
+      selectInput(inputId = "dataset",
+                  label = "Choose a dataset:",
+                  choices = c("Alachua", "Baker", "Bay", "Bradford", "Brevard", "Broward", 
+                             "Calhoun", "Charlotte", "Citrus", "Clay", "Collier", "Columbia", 
+                             "Miami-Dade", "Desoto", "Dixie", "Duval", "Escambia", "Flagler", 
+                             "Franklin", "Gadsden", "Gilchrist", "Glades", "Gulf", "Hamilton",
+                             "Hardee", "Hendry", "Hernando", "Highlands", "Hillsborough", "Holmes",
+                             "Indian River", "Jackson", "Jefferson", "Lafayette", "Lake", "Lee",
+                             "Leon", "Levy", "Liberty", "Madison", "Manatee", "Monroe", "Marion",
+                             "Martin", "Nassau", "Okaloosa", "Okeechobee", "Orange", "Osceola",
+                             "Palm Beach", "Pasco", "Pinellas", "Polk", "Putnam", "Santa Rosa",
+                             "Sarasota", "Seminole", "St. Johns", "St. Lucie", "Sumter", "Suwannee",
+                             "Taylor", "Union", "Volusia", "Wakulla", "Walton", "Washington")),
+      
+    
+    # Show a plot of the generated distribution
+    mainPanel(
+      
+      
+    )
+  )
 )
 )
 
-# Define server function required to create the pie chart
+# Define server logic required to draw a histogram
 server <- function(input, output) {
   
-  # Create pie chart object the plotOutput function is expecting
   output$view <- renderTable({
-    barplot()
-  })
+  }
+  #//do something here
+  )
+  
 }
-
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-

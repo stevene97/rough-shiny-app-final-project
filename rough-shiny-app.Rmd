@@ -41,12 +41,12 @@ df <- df %>% select(-CanNameMiddle)
 df <- df %>% select(-RaceCode)
 
 # Changing votes into percentages 
-x <- df %>% 
+floridaprimary <- df %>% 
   group_by(CountyName, CanNameLast) %>% 
   spread(CanNameLast, CanVotes)
 
 # Only Selecting Gillum, Graham, Greene, King, and Levine
-x <- x %>% 
+floridaprimary <- floridaprimary %>% 
   select(CountyName, Gillum, Graham, Greene, King, Levine, Lundmark, Wetherbee) %>% 
   mutate("Gillum_Percentage" = round(100 * Gillum/ (Gillum + Graham + Greene + King + Levine + Lundmark + Wetherbee), 1)) %>% 
   mutate("Graham_Percentage" = round(100 * Graham / (Gillum + Graham + Greene + King + Levine + Lundmark + Wetherbee), 1)) %>% 
@@ -56,7 +56,28 @@ x <- x %>%
   select(-Lundmark, -Wetherbee, -Gillum, -Graham, -Greene, -King, -Levine) %>% 
   mutate("Other" = round((100 - Gillum_Percentage - Graham_Percentage - Greene_Percentage - King_Percentage - Levine_Percentage), 1))
 
-write_rds(x, path = 'floridaprimary.rds')
+colnames(floridaprimary) <- c('CountyName', 'Gillum', 'Graham', 'Greene', 'King', 'Levine', 'Other')
+```
 
+```{r}
+floridaprimary <- floridaprimary %>% 
+  gather(percent, value, c("Gillum", "Graham", "Greene", "King", "Levine", "Other"))
+```
+
+
+```{r}
+floridaprimary_ <- floridaprimary %>% 
+  as.data.frame()
+
+floridaprimaryfile <- write_rds(floridaprimary_, path = 'rough-shiny-app/floridaprimarydata.rds')
+```
+
+```{r}
+p <- ggplot(floridaprimary_, aes(x = percent, y = value)) + geom_bar(stat='identity') + xlab("Candidate") + ylab("Percent") + ggtitle(paste('Vote Share in ', CountyName, " county"))
+p
 
 ```
+
+
+
+
