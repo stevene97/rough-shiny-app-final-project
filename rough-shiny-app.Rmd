@@ -73,7 +73,10 @@ floridaprimaryfile <- write_rds(floridaprimary_, path = 'rough-shiny-app/florida
 ```
 
 ```{r}
+floridaprimary_
+
 p <- ggplot(floridaprimary_, aes(x = percent, y = value)) + geom_bar(stat='identity') + xlab("Candidate") + ylab("Percent") + ggtitle(paste('Vote Share in ', CountyName, " county"))
+
 p
 
 ```
