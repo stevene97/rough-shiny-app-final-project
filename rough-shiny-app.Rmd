@@ -1,0 +1,62 @@
+---
+title: "rough-shiny-app"
+author: "Steven Espinoza"
+date: "11/4/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+library(tidyverse)
+```
+
+```{r, echo=FALSE}
+# Loading the file
+df <- read_csv('20180828_ElecResultsFL.csv')
+
+# Filter for only Democratic Candidates
+df <- df %>% filter(PartyCode == "DEM")
+
+# Filter for only the governors race
+df <- df %>% filter(RaceName == 'Governor')
+
+# Dropping unnecessary variables
+df <- df %>% 
+  select(-Juris1num, -Juris2num)
+
+# Drop election date (useless)
+df <- df %>% select(-ElectionDate)
+
+# Drop Precincts/Precincts Reporting
+df <- df %>% select(-Precincts, -PrecinctsReporting)
+
+# Drop first name (last name is good enough)
+df <- df %>% select(-CanNameFirst)
+
+# Drop Middle name (mostly NA)
+df <- df %>% select(-CanNameMiddle)
+
+# Drop RaceCode
+df <- df %>% select(-RaceCode)
+
+# Changing votes into percentages 
+x <- df %>% 
+  group_by(CountyName, CanNameLast) %>% 
+  spread(CanNameLast, CanVotes)
+
+# Only Selecting Gillum, Graham, Greene, King, and Levine
+x <- x %>% 
+  select(CountyName, Gillum, Graham, Greene, King, Levine, Lundmark, Wetherbee) %>% 
+  mutate("Gillum_Percentage" = round(100 * Gillum/ (Gillum + Graham + Greene + King + Levine + Lundmark + Wetherbee), 1)) %>% 
+  mutate("Graham_Percentage" = round(100 * Graham / (Gillum + Graham + Greene + King + Levine + Lundmark + Wetherbee), 1)) %>% 
+  mutate("Greene_Percentage" = round(100 * Greene / (Gillum + Graham + Greene + King + Levine + Lundmark + Wetherbee), 1)) %>% 
+  mutate("King_Percentage" = round(100 * King / (Gillum + Graham + Greene + King + Levine + Lundmark + Wetherbee), 1)) %>% 
+  mutate("Levine_Percentage" = round(100 * Levine / (Gillum + Graham + Greene + King + Levine + Lundmark + Wetherbee), 1)) %>% 
+  select(-Lundmark, -Wetherbee, -Gillum, -Graham, -Greene, -King, -Levine) %>% 
+  mutate("Other" = round((100 - Gillum_Percentage - Graham_Percentage - Greene_Percentage - King_Percentage - Levine_Percentage), 1))
+
+write_rds(x, path = 'floridaprimary.rds')
+
+
+```
